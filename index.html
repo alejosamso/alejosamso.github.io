@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alejo Samsó Arnaiz — Strategic CSM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #111318;
+    --bg2:      #161820;
+    --bg3:      #1C1E28;
+    --gold:     #D4735A;
+    --gold-dim: #8B4A38;
+    --cream:    #EEECEA;
+    --muted:    #636270;
+    --subtle:   #22242E;
+    --serif:    'Playfair Display', Georgia, serif;
+    --sans:     'DM Sans', system-ui, sans-serif;
+    --mono:     'DM Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--cream);
+    font-family: var(--sans);
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.25rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, rgba(17,19,24,0.95), transparent);
+    backdrop-filter: blur(8px);
+  }
+  .nav-name { font-family: var(--serif); font-size: 1rem; letter-spacing: 0.05em; color: var(--gold); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--cream); }
+
+  /* ── SECTIONS ── */
+  section { position: relative; z-index: 1; }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 4rem 6rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(12px);
+    animation: fadeUp 0.6s ease forwards 0.2s;
+  }
+
+  .hero-name {
+    font-family: var(--serif);
+    font-size: clamp(3.2rem, 7vw, 6rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fadeUp 0.7s ease forwards 0.35s;
+  }
+  .hero-name em { font-style: italic; color: var(--gold); }
+
+  .hero-line {
+    width: 60px; height: 2px;
+    background: var(--gold);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: lineIn 0.5s ease forwards 0.65s;
+  }
+
+  .hero-tagline {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 560px;
+    line-height: 1.8;
+    margin-bottom: 4rem;
+    opacity: 0;
+    transform: translateY(12px);
+    animation: fadeUp 0.6s ease forwards 0.75s;
+  }
+  .hero-tagline strong { color: var(--cream); font-weight: 500; }
+
+  /* ── METRICS ── */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border: 1px solid var(--subtle);
+    border-radius: 2px;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fadeUp 0.7s ease forwards 1s;
+  }
+
+  .metric {
+    padding: 2rem 1.75rem;
+    border-right: 1px solid var(--subtle);
+    background: var(--bg2);
+    transition: background 0.3s;
+  }
+  .metric:last-child { border-right: none; }
+  .metric:hover { background: var(--bg3); }
+
+  .metric-number {
+    font-family: var(--serif);
+    font-size: 2.4rem;
+    font-weight: 600;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.02em;
+  }
+
+  .metric-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  .metric-note {
+    font-size: 0.65rem;
+    color: var(--gold-dim);
+    margin-top: 0.3rem;
+    font-family: var(--mono);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── SCROLL HINT ── */
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    color: var(--muted);
+    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 1.4s;
+  }
+  .scroll-line {
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s ease infinite 1.8s;
+  }
+
+  /* ── CONTEXT BAND ── */
+  #context {
+    background: var(--bg2);
+    border-top: 1px solid var(--subtle);
+    border-bottom: 1px solid var(--subtle);
+    padding: 2rem 4rem;
+  }
+  .context-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+  }
+  .context-tag {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .context-text {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.7;
+    border-left: 1px solid var(--subtle);
+    padding-left: 3rem;
+  }
+  .context-text strong { color: var(--cream); font-weight: 500; }
+
+  /* ── STORY ── */
+  #story {
+    padding: 8rem 4rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 6rem;
+    align-items: start;
+  }
+  .story-label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    padding-top: 0.3rem;
+    position: sticky;
+    top: 8rem;
+  }
+  .story-chapter {
+    margin-bottom: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid var(--subtle);
+  }
+  .story-chapter:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .chapter-year { font-family: var(--serif); font-size: 0.9rem; font-style: italic; color: var(--gold-dim); margin-bottom: 0.75rem; }
+  .chapter-title { font-family: var(--serif); font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; line-height: 1.3; }
+  .chapter-body { color: var(--muted); line-height: 1.85; font-size: 0.95rem; }
+  .chapter-body strong { color: var(--cream); font-weight: 500; }
+
+  /* ── HIGHLIGHTS ── */
+  #highlights {
+    padding: 8rem 4rem;
+    background: var(--bg2);
+    border-top: 1px solid var(--subtle);
+    border-bottom: 1px solid var(--subtle);
+  }
+  .section-header { max-width: 1100px; margin: 0 auto 4rem; display: flex; align-items: baseline; gap: 2rem; }
+  .section-eyebrow { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase; white-space: nowrap; }
+  .section-title { font-family: var(--serif); font-size: 2rem; font-weight: 400; line-height: 1.2; }
+
+  .highlights-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5px;
+    background: var(--subtle);
+    border: 1.5px solid var(--subtle);
+  }
+  .highlight-card {
+    background: var(--bg2);
+    padding: 2.5rem;
+    transition: background 0.3s;
+  }
+  .highlight-card:hover { background: var(--bg3); }
+
+  .card-number {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--gold-dim);
+    letter-spacing: 0.15em;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .card-number::after { content: ''; flex: 1; height: 1px; background: var(--subtle); max-width: 40px; }
+
+  .card-title { font-family: var(--serif); font-size: 1.2rem; font-weight: 600; margin-bottom: 1rem; line-height: 1.3; }
+
+  .card-star {
+    display: grid;
+    grid-template-columns: 1.5rem 1fr;
+    gap: 0.35rem 0.6rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+  }
+  .star-label { font-family: var(--mono); font-size: 0.68rem; color: var(--gold); letter-spacing: 0.1em; padding-top: 0.18rem; }
+
+  .card-result-tag {
+    display: inline-block;
+    padding: 0.35rem 0.85rem;
+    background: rgba(212,115,90,0.08);
+    border: 1px solid rgba(212,115,90,0.25);
+    border-radius: 2px;
+    font-size: 0.78rem;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    font-weight: 500;
+  }
+
+  /* ── QUOTES ── */
+  #quotes { padding: 8rem 4rem; max-width: 1100px; margin: 0 auto; }
+  .quotes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 4rem; }
+  .quote-card { padding: 2rem; border-left: 2px solid var(--gold-dim); background: var(--bg2); }
+  .quote-mark { font-family: var(--serif); font-size: 3rem; color: var(--gold-dim); line-height: 0.5; margin-bottom: 1rem; display: block; }
+  .quote-text { font-family: var(--serif); font-size: 0.95rem; font-style: italic; color: var(--cream); line-height: 1.75; margin-bottom: 1.25rem; }
+  .quote-source { font-family: var(--mono); font-size: 0.68rem; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; }
+
+  /* ── NEXT ── */
+  #next {
+    padding: 8rem 4rem;
+    background: var(--bg2);
+    border-top: 1px solid var(--subtle);
+    text-align: center;
+  }
+  .next-inner { max-width: 640px; margin: 0 auto; }
+  .next-eyebrow { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase; margin-bottom: 2rem; }
+  .next-title { font-family: var(--serif); font-size: 2.5rem; font-weight: 600; line-height: 1.2; margin-bottom: 1.5rem; }
+  .next-title em { font-style: italic; color: var(--gold); }
+  .next-body { color: var(--muted); line-height: 1.85; font-size: 0.95rem; margin-bottom: 2.5rem; }
+  .next-body strong { color: var(--cream); font-weight: 500; }
+
+  .cta-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 2rem;
+    border: 1px solid var(--gold-dim);
+    color: var(--gold);
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    font-family: var(--sans);
+  }
+  .cta-link:hover { background: rgba(212,115,90,0.08); border-color: var(--gold); }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 2rem 4rem;
+    border-top: 1px solid var(--subtle);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-name { font-family: var(--serif); font-size: 0.85rem; color: var(--muted); }
+  .footer-note { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); letter-spacing: 0.1em; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+  @keyframes lineIn { to { opacity: 1; transform: scaleX(1); } }
+  @keyframes scrollPulse {
+    0%   { transform: scaleY(0); transform-origin: top; opacity: 1; }
+    50%  { transform: scaleY(1); transform-origin: top; opacity: 1; }
+    100% { transform: scaleY(1); transform-origin: bottom; opacity: 0; }
+  }
+
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 800px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    #hero { padding: 7rem 1.5rem 4rem; }
+    .metrics { grid-template-columns: 1fr 1fr; }
+    #context { padding: 2rem 1.5rem; }
+    .context-inner { flex-direction: column; gap: 1rem; }
+    .context-text { border-left: none; padding-left: 0; border-top: 1px solid var(--subtle); padding-top: 1rem; }
+    #story { padding: 4rem 1.5rem; grid-template-columns: 1fr; gap: 2rem; }
+    .story-label { position: static; }
+    #highlights { padding: 4rem 1.5rem; }
+    .highlights-grid { grid-template-columns: 1fr; }
+    #quotes { padding: 4rem 1.5rem; }
+    .quotes-grid { grid-template-columns: 1fr; }
+    #next { padding: 4rem 1.5rem; }
+    footer { padding: 1.5rem; flex-direction: column; gap: 0.75rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-name">Alejo Samsó Arnaiz</span>
+  <ul class="nav-links">
+    <li><a href="#story">Story</a></li>
+    <li><a href="#highlights">Work</a></li>
+    <li><a href="#quotes">Recognition</a></li>
+    <li><a href="#next">What's next</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <p class="hero-eyebrow">Strategic Customer Success &nbsp;·&nbsp; SaaS &nbsp;·&nbsp; Spain &amp; Europe</p>
+  <h1 class="hero-name">Alejo<br>Samsó <em>Arnaiz</em></h1>
+  <div class="hero-line"></div>
+  <p class="hero-tagline">
+    Two years as <strong>top individual revenue contributor</strong> in a global Customer Success team —
+    growing accounts, protecting revenue, and building the people and processes around me.
+    Now taking the next step into <strong>CX leadership</strong>.
+  </p>
+
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-number" data-target="109.48" data-suffix="%" data-decimals="2">0%</div>
+      <div class="metric-label">Net Revenue<br>Retention</div>
+      <div class="metric-note">FY 2025</div>
+    </div>
+    <div class="metric">
+      <div class="metric-number" data-target="99.76" data-suffix="%" data-decimals="2">0%</div>
+      <div class="metric-label">Gross Revenue<br>Retention</div>
+      <div class="metric-note">FY 2025</div>
+    </div>
+    <div class="metric">
+      <div class="metric-number" data-target="37" data-suffix="%" data-decimals="0">0%</div>
+      <div class="metric-label">Of team's expansion<br>revenue</div>
+      <div class="metric-note">FY 2025 · #1 globally</div>
+    </div>
+    <div class="metric">
+      <div class="metric-number" data-target="75" data-suffix="%" data-decimals="0">0%</div>
+      <div class="metric-label">Of team's<br>reactivation revenue</div>
+      <div class="metric-note">FY 2025</div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- CONTEXT BAND -->
+<section id="context">
+  <div class="context-inner reveal">
+    <span class="context-tag">Context</span>
+    <p class="context-text">
+      I work at <strong>Beyond</strong>, a SaaS company that helps short-term rental hosts and property managers across the world <strong>optimise their pricing and revenue</strong> using dynamic algorithms and market data. As a Strategic Customer Success Manager, I own a portfolio of high-value clients in <strong>Spain and Europe</strong> — helping them get the most out of the platform, growing their accounts over time, and making sure they stay.
+    </p>
+  </div>
+</section>
+
+<!-- STORY -->
+<section id="story">
+  <div class="story-label reveal">The story</div>
+  <div class="story-content">
+
+    <div class="story-chapter reveal">
+      <div class="chapter-year">2024</div>
+      <h2 class="chapter-title">Mastered the role from day one.</h2>
+      <p class="chapter-body">
+        I moved from a Sales role into Customer Success — a fundamentally different discipline that requires building long-term client relationships, protecting existing revenue, and growing accounts over time rather than closing new ones. In year one, I adapted fast. I ended the year with <strong>zero revenue lost to churn</strong>, an average Net Revenue Retention above 108%, and strong expansion numbers in the second half. When key accounts were approached by direct competitors offering lower prices, I retained them through a consultative approach — making the case for value and outcomes rather than competing on cost. I also redesigned how I managed renewals, closing them significantly ahead of schedule to free capacity for growth work.
+      </p>
+    </div>
+
+    <div class="story-chapter reveal">
+      <div class="chapter-year">2025</div>
+      <h2 class="chapter-title">Built the team around me.</h2>
+      <p class="chapter-body">
+        The numbers scaled: <strong>109.48% NRR</strong>, 37% of the team's total expansion revenue as a single contributor, #1 upgrade performer globally for the second consecutive year. But the more important story is what happened around those results. I mentored a junior teammate entering a complex market; they're now independently managing sophisticated accounts. My approach to early renewals was recognised by my manager as <strong>a model the wider team adopted</strong>. My manager wrote: "The team operates differently than they did 12 months ago — Alejo helped drive this transition." I delivered all of this while navigating new parenthood. The year ended with a <strong>promotion and President's Club</strong> recognition.
+      </p>
+    </div>
+
+    <div class="story-chapter reveal">
+      <div class="chapter-year">Next</div>
+      <h2 class="chapter-title">Formalise what's already happening.</h2>
+      <p class="chapter-body">
+        The gaps I identified as an individual contributor — <strong>building scalable strategies, formalising playbooks, enabling the team systematically</strong> — are precisely what I want to take on in a leadership role. I've been operating at the scope and impact of a manager from an IC seat. The next step is making it official.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- HIGHLIGHTS -->
+<section id="highlights">
+  <div class="section-header reveal">
+    <span class="section-eyebrow">Selected work</span>
+    <h2 class="section-title">Four moments that define the case</h2>
+  </div>
+
+  <div class="highlights-grid">
+
+    <div class="highlight-card reveal">
+      <div class="card-number">01</div>
+      <h3 class="card-title">Elevating the team's commercial approach</h3>
+      <div class="card-star">
+        <span class="star-label">S</span>
+        <span>The Customer Success team needed to shift from a reactive account management posture to a more commercially proactive one — expanding accounts earlier, generating new business, and being more visible with clients.</span>
+        <span class="star-label">A</span>
+        <span>Led by example across two consecutive years — consistently #1 in expansion revenue, new business, and win-backs within the team. Shared methods openly and operated as an informal reference point for colleagues navigating complex commercial situations.</span>
+        <span class="star-label">R</span>
+        <span>Manager noted a visible shift in how the whole team operated, attributing it directly to this influence: "His accomplishments have helped motivate the team to close deals early, be more customer facing, and overall level up their commercial muscle."</span>
+      </div>
+      <span class="card-result-tag">Team-wide behavioural change</span>
+    </div>
+
+    <div class="highlight-card reveal">
+      <div class="card-number">02</div>
+      <h3 class="card-title">Mentoring new joiners across EMEA</h3>
+      <div class="card-star">
+        <span class="star-label">S</span>
+        <span>As the team grew across EMEA, new joiners needed to ramp quickly on complex, high-value accounts — markets that require deep regional knowledge, consultative skills, and the ability to manage sophisticated clients from day one.</span>
+        <span class="star-label">A</span>
+        <span>Acted as an informal mentor to multiple new team members — sharing account management frameworks, expansion strategies, and regional market knowledge built over years in the field. Became the go-to resource for colleagues navigating complex client situations, without reducing my own commercial targets.</span>
+        <span class="star-label">R</span>
+        <span>Manager credited the mentorship directly in the year-end review: "We can already see the fruits of this mentorship as they take on more complex accounts and continue to build relationships with clients successfully."</span>
+      </div>
+      <span class="card-result-tag">Team-wide ramp acceleration</span>
+    </div>
+
+    <div class="highlight-card reveal">
+      <div class="card-number">03</div>
+      <h3 class="card-title">Retaining key accounts against direct competitors</h3>
+      <div class="card-star">
+        <span class="star-label">S</span>
+        <span>Several high-value clients were approached by direct competitors offering lower fees. Competing on price alone was not an option — it would have undermined the value proposition for the entire portfolio.</span>
+        <span class="star-label">A</span>
+        <span>Developed tailored success plans for each at-risk account. Ran fully consultative retention conversations — quantifying the revenue outcomes the platform delivered versus what a cheaper alternative might cost them in performance.</span>
+        <span class="star-label">R</span>
+        <span>All at-risk accounts retained. Clients chose to stay despite lower-cost alternatives, reinforcing confidence in the platform's value rather than its price. Contributed to a near-zero churn result for the full year.</span>
+      </div>
+      <span class="card-result-tag">99.76% Gross Revenue Retention</span>
+    </div>
+
+    <div class="highlight-card reveal">
+      <div class="card-number">04</div>
+      <h3 class="card-title">Designing a renewal model the team adopted</h3>
+      <div class="card-star">
+        <span class="star-label">S</span>
+        <span>Customer Success teams typically manage contract renewals reactively — close to the expiry date — which creates revenue uncertainty and leaves little room for proactive growth work.</span>
+        <span class="star-label">A</span>
+        <span>Built and refined a proactive renewal approach over two years: closing contracts significantly ahead of expiry, securing multi-year agreements where possible, and framing early closures as a forecasting and capacity tool — not just a personal metric. Made the reasoning visible so it could be replicated by others.</span>
+        <span class="star-label">R</span>
+        <span>Manager independently recognised the approach as a model for the team: "A model for how early execution creates bandwidth for higher-value activities." Freed up capacity that directly contributed to new business and win-back performance in the same period.</span>
+      </div>
+      <span class="card-result-tag">Team-adopted process</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- QUOTES -->
+<section id="quotes">
+  <div class="section-header reveal">
+    <span class="section-eyebrow">Recognition</span>
+    <h2 class="section-title">In the manager's own words</h2>
+  </div>
+
+  <div class="quotes-grid">
+
+    <div class="quote-card reveal">
+      <span class="quote-mark">"</span>
+      <p class="quote-text">Alejo is not only a key contributor to the company goals, he also levels up the entire team. The team operates differently than they did 12 months ago. Alejo helped drive this transition.</p>
+      <span class="quote-source">Manager — Annual Review 2025</span>
+    </div>
+
+    <div class="quote-card reveal">
+      <span class="quote-mark">"</span>
+      <p class="quote-text">His ability to operate beyond traditional Customer Success scope — combining consultative selling, portfolio strategy, and proactive account management — continues to raise the performance bar for the team.</p>
+      <span class="quote-source">Manager — Annual Review 2025</span>
+    </div>
+
+    <div class="quote-card reveal">
+      <span class="quote-mark">"</span>
+      <p class="quote-text">We can already see the fruits of this mentorship as they take on more complex accounts and continue to build relationships with clients successfully.</p>
+      <span class="quote-source">Manager — Annual Review 2025</span>
+    </div>
+
+    <div class="quote-card reveal">
+      <span class="quote-mark">"</span>
+      <p class="quote-text">Managing a high-touch portfolio while navigating new parenthood strengthened his prioritisation, execution, and multitasking skills, allowing him to maintain top-tier performance.</p>
+      <span class="quote-source">Manager — Annual Review 2025</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- NEXT -->
+<section id="next">
+  <div class="next-inner">
+    <p class="next-eyebrow reveal">What's next</p>
+    <h2 class="next-title reveal">Ready to <em>multiply</em><br>through others.</h2>
+    <p class="next-body reveal">
+      The things I couldn't fully pursue as an individual contributor — <strong>building scalable strategies, formalising playbooks, enabling the team systematically</strong> — are precisely what excites me about a leadership role in Customer Success. I've spent two years proving I can perform at the highest individual level. The next chapter is about making the people around me perform at that level too.
+    </p>
+    <a class="cta-link reveal" href="https://www.linkedin.com/in/alejosamso/" target="_blank">
+      Connect on LinkedIn &nbsp;→
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-name">Alejo Samsó Arnaiz</span>
+  <span class="footer-note">Strategic CSM · SaaS · Spain &amp; Europe · 2026</span>
+</footer>
+
+<script>
+  /* ── COUNTER ANIMATION ── */
+  function animateCounter(el) {
+    const target   = parseFloat(el.dataset.target);
+    const suffix   = el.dataset.suffix  || '';
+    const decimals = parseInt(el.dataset.decimals || '0', 10);
+    const duration = 1800;
+    const start    = performance.now();
+
+    function step(now) {
+      const elapsed = Math.min((now - start) / duration, 1);
+      const ease    = 1 - Math.pow(1 - elapsed, 3);
+      const value   = target * ease;
+      el.textContent = value.toFixed(decimals) + suffix;
+      if (elapsed < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  /* ── SCROLL REVEAL ── */
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  /* ── COUNTER TRIGGER ── */
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('[data-target]').forEach(animateCounter);
+        counterObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  const metricsEl = document.querySelector('.metrics');
+  if (metricsEl) counterObserver.observe(metricsEl);
+
+  /* ── ACTIVE NAV ── */
+  const navLinks = document.querySelectorAll('.nav-links a');
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(a => {
+          a.style.color = a.getAttribute('href') === '#' + entry.target.id ? 'var(--cream)' : '';
+        });
+      }
+    });
+  }, { threshold: 0.4 });
+
+  document.querySelectorAll('section[id]').forEach(s => navObserver.observe(s));
+</script>
+
+</body>
+</html>
